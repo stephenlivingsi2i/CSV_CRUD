@@ -8,10 +8,12 @@ from rest_framework.response import Response
 from csv import writer,reader
 import os
 import pandas as pd
-# Create your views here.
+
 
 @api_view(['POST'])
 def add_employee(request): 
+    '''add a new employee row into csv file'''
+    
     header = ['Employee_id', 'Firstname','Lastname', 'Designation']
     filename = './employee_file.csv'
     if os.path.exists(filename):
@@ -29,6 +31,8 @@ def add_employee(request):
 
 @api_view(['GET'])
 def get_employees(request):
+    '''get all employee rows from csv file'''
+    
     filename = './employee_file.csv'
     result = pd.read_csv(filename)
     return Response(result.to_dict())
@@ -36,6 +40,8 @@ def get_employees(request):
 
 @api_view(['GET'])
 def get_employee_by_id(request, employee_id):
+    '''get particular employee row'''
+    
     filename = './employee_file.csv'
     data = pd.read_csv(filename, index_col ="Employee_id")
     employee_details = data.loc[employee_id]
@@ -45,6 +51,8 @@ def get_employee_by_id(request, employee_id):
 
 @api_view(['PUT'])
 def update_employee(request, employee_id, column_name):
+    '''update a particular employee field'''
+    
     data = pd.read_csv('./employee_file.csv')
     index = data.index[data['Employee_id']==employee_id].to_list()
     # print(data.loc[2, column_name])
